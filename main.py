@@ -1,8 +1,6 @@
 # Импорт встроенной библиотеки для работы веб-сервера
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
-
-from src.path import root_join
+from src.config import file_contact_html
 
 # Для начала определим настройки запуска
 hostName = "localhost"  # Адрес для доступа по сети
@@ -14,14 +12,13 @@ class MyServer(BaseHTTPRequestHandler):
     Специальный класс, который отвечает за
     обработку входящих запросов от клиентов
     """
-
     def do_GET(self):
         """ Метод для обработки входящих GET-запросов
         """
         self.send_response(200)  # Отправка кода ответа
         self.send_header("Content-type", "text/html")  # Отправка типа данных, который будет передаваться
         self.end_headers()
-        with open(root_join('html_files/contact.html'), encoding='utf-8') as f:
+        with open(file_contact_html, encoding='utf-8') as f:
             content = f.read()
         # Завершение формирования заголовков ответа
         self.wfile.write(bytes(content, "utf-8"))  # Тело ответа
@@ -29,6 +26,7 @@ class MyServer(BaseHTTPRequestHandler):
     def do_POST(self):
         content_length = int(self.headers["Content-Length"])
         post_data = self.rfile.read(content_length)
+        print(post_data)
 
         response = f"Received POST data: {post_data.decode('utf-8')}"
         print(response)
